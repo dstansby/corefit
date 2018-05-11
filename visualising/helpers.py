@@ -3,6 +3,7 @@ import os
 from datetime import timedelta
 import pandas as pd
 import numpy as np
+import scipy.interpolate as interp
 
 sys.path.append('./fitting')
 from config import get_dirs
@@ -80,6 +81,19 @@ def rotationmatrixangle(axis, theta):
                     [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
                     [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
     return out[:, :, 0]
+
+
+def interp_dist(vs, pdf, nbins, vlim):
+    '''
+    Interpolate distribution function onto a regular grid cube of side nbins
+    centred at 0, and with sides in velocity space of *vlim*.
+    '''
+    x, y, z = np.meshgrid(np.linspace(-vlim, vlim, nbins + 1),
+                          np.linspace(-vlim, vlim, nbins + 1),
+                          np.linspace(-vlim, vlim, nbins + 1))
+    pdf = interp.griddata(vs, pdf, np.array([x, y, z]).T,
+                          method='linear').T
+    return x, y, z, pdf
 
 
 def angle(v1, v2):

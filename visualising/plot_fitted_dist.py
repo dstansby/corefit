@@ -66,8 +66,8 @@ def perp_par_vels(vs, bulkv, R):
 
 def plot_dist_time(probe, time):
     # Calls plot_dist with a given time. Uses already processed values
-    corefit = helpers.load_corefit(probe, time - dt(seconds=20),
-                                   time + dt(seconds=20))
+    corefit = helios.corefit(probe, time - dt(seconds=20),
+                             time + dt(seconds=20))
     corefit = corefit[corefit.index == time]
     if corefit.shape[0] != 1:
         raise ValueError('Could not find fitted parameters at requested time')
@@ -91,7 +91,7 @@ def slice_dist(vs, pdf, plane):
     plane : int
         0 for y-z, 1 for x-z, 2 for y-z.
     '''
-    vlim = 400
+    vlim = 800
     nbins = 200
     dim1, dim2 = np.meshgrid(np.linspace(-vlim, vlim, nbins + 1),
                              np.linspace(-vlim, vlim, nbins + 1))
@@ -241,6 +241,7 @@ def plot_dist(time, dist, params, output, I1a, I1b):
         ax[2].set_xlim(400, 1600)
         fig.tight_layout()
         fig.subplots_adjust(top=0.9)
+        '''
         vperp, vpar = perp_par_vels(dist[['vx', 'vy', 'vz']].values,
                                     output[['vp_x', 'vp_y', 'vp_z']].values, R)
         levels = np.linspace(-5, 0, 20)
@@ -264,6 +265,7 @@ def plot_dist(time, dist, params, output, I1a, I1b):
             # ax2.set_aspect('equal', 'datalim')
             ax2.set_xlabel(r'$v_{\parallel}$')
             ax2.set_ylabel(r'$v_{\perp}$')
+        '''
 
 
 if __name__ == '__main__':
